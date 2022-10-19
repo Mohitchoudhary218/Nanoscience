@@ -1,0 +1,30 @@
+#include <Adafruit_INA219.h>
+#include<Wire.h>
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(12,11,6,5,4,3);
+Adafruit_INA219 ina219;
+void setup() {
+Serial.begin(9600);
+  lcd.begin(16,2);
+  ina219.begin();
+  pinMode(2,OUTPUT);
+  }
+void loop() {
+ digitalWrite(2,HIGH);
+ float shuntvoltage=0;
+ float current=0;
+ float busvoltage=0;
+ float blglucose=0;
+ float loadvoltage=0;
+ shuntvoltage=ina219.getShuntVoltage_mV();
+ current=ina219.getCurrent_mA();
+ busvoltage=ina219.getBusVoltage_V();
+ loadvoltage = busvoltage + (shuntvoltage / 1000);
+ blglucose=(loadvoltage/current)*1000;
+  lcd.setCursor(0,0);
+  lcd.print("current:");lcd.print(current);lcd.println("mA");
+  lcd.setCursor(0,1);
+  lcd.print("blgluc :");lcd.print(blglucose);lcd.println("M");
+  lcd.println("");
+  delay(2000);
+}
