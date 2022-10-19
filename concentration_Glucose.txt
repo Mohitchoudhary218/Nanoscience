@@ -1,0 +1,50 @@
+#include<LiquidCrystal.h>
+
+LiquidCrystal lcd(2,3,4,5,6,7);   //rs,e,d4,d5,d6,d7
+
+int Vin=5;        //voltage at 5V pin of arduino
+float Vout=0;     //voltage at A0 pin of arduino
+float R1=10000;    //value of known resistance
+float R2=0;
+float R3=588;         //value of known resistance
+float R4=0;
+int a2d_data=0;
+int a2d_data1=0;    
+float buffer=0;
+void setup() {
+  lcd.begin(16,2);
+}
+
+void loop() {
+    a2d_data=analogRead(A0);
+    a2d_data1=analogRead(A1);
+  if(a2d_data)
+  {
+    buffer=a2d_data*Vin;
+    Vout=(buffer)/1024.0;
+    buffer=Vout/(Vin-Vout);
+    R2=R1*buffer;
+
+    lcd.setCursor(4,0);
+    lcd.print("ELECTRODE 1 ");
+
+    lcd.setCursor(0,1);
+    lcd.print("R (ohm) = ");
+    lcd.print(R2);
+    delay(5000);
+  }
+  if(a2d_data1)
+  {
+    buffer=a2d_data1*Vin;
+    Vout=(buffer)/1024.0;
+    buffer=Vout/(Vin-Vout);
+    R4=R3*buffer;
+    lcd.setCursor(4,0);
+    lcd.print("ELECTRODE 2 ");
+
+    lcd.setCursor(0,1);
+    lcd.print("R (ohm) = ");
+    lcd.print(R4);
+    delay(5000);
+    }
+}
